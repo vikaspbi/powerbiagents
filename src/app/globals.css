@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #122a30;
+  --muted: #5a6f76;
+  --teal: #0b5f6b;
+  --teal-deep: #084851;
+  --teal-soft: #d7ebee;
+  --sand: #efe6d6;
+  --panel: #fffdf8;
+  --line: #d7e0e2;
+  --background: #e8eef0;
+  --foreground: #122a30;
+}
+
+body {
+  color: var(--foreground);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #d7ebee 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #efe6d6 0%, transparent 50%),
+    linear-gradient(180deg, #eef3f4 0%, #e4ecee 100%);
+  font-family: var(--font-sans), "Outfit", sans-serif;
+  min-height: 100vh;
+}
+
+.brand-mark {
+  font-family: var(--font-display), "Fraunces", serif;
+  font-optical-sizing: auto;
+}
+
+.md-table th,
+.md-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0.65rem;
+  vertical-align: top;
+}
+
+.md-table th {
+  background: #f4f7f6;
+  font-weight: 600;
+}
+
+.markdown-body pre {
+  margin: 0.75rem 0;
+}
+
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
