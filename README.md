@@ -21,6 +21,8 @@ npm run test:dax
 npm run dev
 ```
 
+Requires **Node.js 22+** (the database uses Node’s built-in SQLite, so Windows does not need Python or Visual Studio Build Tools).
+
 Open [http://localhost:3000](http://localhost:3000). Create an account, then use **Activate demo Pro** on the subscribe page in development.
 
 ## Scripts

@@ -9,11 +9,13 @@
     "lint": "eslint src --max-warnings 0",
     "test:dax": "tsx src/lib/dax-engine.test.ts"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.4.1",
     "jose": "^6.2.9",
     "next": "^16.3.0",
     "react": "^19.0.0",
@@ -24,7 +26,6 @@
     "@capacitor/cli": "^8.5.0",
     "@eslint/eslintrc": "^3",
     "@types/bcryptjs": "^2.4.6",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

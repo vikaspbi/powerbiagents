@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 
-const globalForDb = globalThis as unknown as { lpbiDb?: Database.Database };
+const globalForDb = globalThis as unknown as { lpbiDb?: DatabaseSync };
 
 function resolveDbPath() {
   return path.join(process.cwd(), "data", "learninpowerbi.db");
@@ -11,8 +11,8 @@ function resolveDbPath() {
 function createDb() {
   const dbPath = resolveDbPath();
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-  const db = new Database(dbPath);
-  db.pragma("journal_mode = WAL");
+  const db = new DatabaseSync(dbPath);
+  db.exec("PRAGMA journal_mode = WAL");
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
