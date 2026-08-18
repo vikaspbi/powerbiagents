@@ -88,7 +88,7 @@ export function AppChrome({
                 )}
                 <Link
                   href={`/${locale}/subscribe`}
-                  className="hidden rounded-full bg-[var(--teal)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] sm:inline"
+                  className="gold-fill hidden rounded-full px-3 py-1.5 text-xs sm:inline"
                 >
                   {isPro ? "Pro" : t(dict, "nav.subscribe")}
                 </Link>
@@ -114,6 +114,7 @@ export function AppChrome({
                     className={`flex h-14 flex-col items-center justify-center ${active ? "text-[var(--teal)]" : "text-[var(--muted)]"}`}
                   >
                     {t(dict, tab.key)}
+                    {!isPro && (tab.href === "/quiz" || tab.href === "/dax" || tab.href === "/play") ? " 🔒" : ""}
                   </Link>
                 </li>
               );
@@ -126,13 +127,15 @@ export function AppChrome({
           {tabs.map((tab) => {
             const href = `/${locale}${tab.href}`;
             const active = rest === tab.href || rest.startsWith(`${tab.href}/`);
+            const locked = !isPro && (tab.href === "/quiz" || tab.href === "/dax" || tab.href === "/play");
             return (
               <Link
                 key={tab.href}
                 href={href}
-                className={`rounded-full px-4 py-2 text-sm ${active ? "bg-[var(--teal)] font-bold text-[var(--ink)]" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
+                className={`rounded-full px-4 py-2 text-sm ${active ? "gold-fill" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
               >
                 {t(dict, tab.key)}
+                {locked ? " 🔒" : ""}
               </Link>
             );
           })}

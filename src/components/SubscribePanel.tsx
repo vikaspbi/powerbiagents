@@ -8,10 +8,16 @@ export function SubscribePanel({
   locale,
   isPro,
   periodEnd,
+  status,
+  provider,
+  isAdmin,
 }: {
   locale: Locale;
   isPro: boolean;
   periodEnd?: string | null;
+  status?: string | null;
+  provider?: string | null;
+  isAdmin?: boolean;
 }) {
   const dict = dictionaries[locale];
   const [message, setMessage] = useState("");
@@ -30,6 +36,17 @@ export function SubscribePanel({
     setMessage(data.error || t(dict, "common.error"));
   }
 
+  async function cancel() {
+    const res = await fetch("/api/billing/cancel", { method: "POST" });
+    const data = (await res.json()) as { error?: string; message?: string };
+    if (!res.ok) {
+      setMessage(data.error || t(dict, "common.error"));
+      return;
+    }
+    setMessage(data.message || t(dict, "sub.canceled", { date: periodEnd ? new Date(periodEnd).toLocaleDateString(locale) : "" }));
+    window.location.reload();
+  }
+
   async function demo() {
     const res = await fetch("/api/billing/checkout", { method: "PUT" });
     const data = (await res.json()) as { error?: string };
@@ -45,8 +62,10 @@ export function SubscribePanel({
       <h1 className="brand-mark text-4xl">{t(dict, "sub.title")}</h1>
       <p className="text-[var(--muted)]">{t(dict, "sub.included")}</p>
       {isPro && periodEnd && (
-        <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm dark:bg-emerald-950">
-          {t(dict, "sub.active", { date: new Date(periodEnd).toLocaleDateString(locale) })}
+        <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
+          {status === "canceled"
+            ? t(dict, "sub.canceled", { date: new Date(periodEnd).toLocaleDateString(locale) })
+            : t(dict, "sub.active", { date: new Date(periodEnd).toLocaleDateString(locale) })}
         </p>
       )}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -71,6 +90,14 @@ export function SubscribePanel({
       </div>
       <p className="text-sm text-[var(--muted)]">{t(dict, "sub.play")}</p>
       <p className="text-sm text-[var(--muted)]">{t(dict, "sub.restore")}</p>
+      {isPro && !isAdmin && status !== "canceled" && (
+        <button type="button" onClick={() => void cancel()} className="rounded-full border border-[var(--line)] px-4 py-2 text-sm">
+          {t(dict, "sub.cancel")}
+        </button>
+      )}
+      {provider === "google_play" && (
+        <p className="text-sm text-[var(--muted)]">{t(dict, "sub.playCancel")}</p>
+      )}
       <button type="button" onClick={() => void demo()} className="rounded-full border border-[var(--line)] px-4 py-2 text-sm">
         {t(dict, "sub.demo")}
       </button>

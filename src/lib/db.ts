@@ -115,6 +115,24 @@ function createDb() {
       id TEXT NOT NULL,
       PRIMARY KEY (kind, id)
     );
+
+    CREATE TABLE IF NOT EXISTS catalog_paths (
+      id TEXT PRIMARY KEY,
+      number INTEGER NOT NULL,
+      track TEXT NOT NULL DEFAULT 'Custom',
+      free INTEGER NOT NULL DEFAULT 0,
+      copy TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS catalog_lessons (
+      id TEXT PRIMARY KEY,
+      path_id TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 1,
+      free INTEGER NOT NULL DEFAULT 0,
+      copy TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
   `);
   migrateUsers(db);
   return db;
@@ -167,11 +185,14 @@ export interface PublicUser {
 
 export function toPublicUser(user: UserRow, sub?: { plan: string; status: string; current_period_end: string | null } | null): PublicUser {
   const isAdmin = user.is_admin === 1 || isSuperAdminEmail(user.email);
-  const active =
+  const periodOk =
     !!sub &&
-    (sub.status === "active" || sub.status === "trialing") &&
     (!sub.current_period_end || new Date(sub.current_period_end).getTime() > Date.now());
-  const isPro = active || isAdmin;
+  const statusOk =
+    !!sub &&
+    (sub.status === "active" || sub.status === "trialing" || sub.status === "canceled");
+  const paid = Boolean(periodOk && statusOk);
+  const isPro = paid || isAdmin;
   return {
     id: user.id,
     email: user.email,
@@ -182,7 +203,7 @@ export function toPublicUser(user: UserRow, sub?: { plan: string; status: string
     streak: user.streak,
     lastActiveDate: user.last_active_date,
     createdAt: user.created_at,
-    plan: isAdmin ? "admin" : active ? sub!.plan : "free",
+    plan: isAdmin ? "admin" : paid ? sub!.plan : "free",
     subscriptionStatus: isAdmin ? "admin" : (sub?.status ?? "none"),
     isPro,
     isAdmin,

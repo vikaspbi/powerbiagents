@@ -35,6 +35,12 @@ Create base plans:
 
 The Android client must send `purchaseToken` to `POST /api/billing/play/verify`. Configure a Play service account JSON in production. Do not unlock the same digital goods via Stripe inside the Play-distributed APK.
 
+Cancel: Play subscriptions must also be cancelled in Google Play so the next period is not billed. The app keeps Pro until `current_period_end`.
+
+## Ads
+
+Ads do **not** start just because the app is on Play Store. Create an AdMob app + banner unit, add the IDs, and show banners only for Free users (Pro is ad-free). Until those IDs exist, no live ads are served.
+
 ## Closed testing
 
 New Play Console accounts usually need a closed testing track with testers before production.

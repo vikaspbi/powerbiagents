@@ -7,25 +7,15 @@ import { jsonError } from "@/lib/http";
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return jsonError("Unauthorized", 401);
+  if (!user.isPro) {
+    return jsonError("Pro required.", 402);
+  }
   const body = (await request.json().catch(() => null)) as {
     quizId?: string;
     answers?: Record<string, number>;
   } | null;
   const quizId = body?.quizId || "practice";
   const answers = body?.answers || {};
-
-  if (quizId === "practice" && !user.isPro) {
-    const today = new Date().toISOString().slice(0, 10);
-    const used = getDb()
-      .prepare(
-        `SELECT COUNT(*) as c FROM quiz_attempts
-         WHERE user_id = ? AND quiz_id = 'practice' AND substr(created_at, 1, 10) = ?`,
-      )
-      .get(user.id, today) as { c: number };
-    if (used.c >= 1) {
-      return jsonError("Free accounts get one full practice run per day.", 402);
-    }
-  }
 
   const practice = getPublishedQuizBank("practice");
   const play = getPublishedQuizBank("play");

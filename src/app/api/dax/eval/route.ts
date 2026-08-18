@@ -9,6 +9,9 @@ import { SALES_MODEL } from "@/lib/sample-model";
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return jsonError("Unauthorized", 401);
+  if (!user.isPro) {
+    return jsonError("Pro required.", 402);
+  }
   const body = (await request.json().catch(() => null)) as {
     expression?: string;
     exerciseId?: string;

@@ -61,12 +61,12 @@ export function makePath(
   subtitle: string,
   lessons: Omit<Lesson, "pathId" | "order" | "free">[] | Lesson[],
 ): LearningPath {
-  const freePath = number <= 3;
+  const freePath = number <= 40;
   const built: Lesson[] = lessons.map((lesson, index) => ({
     ...lesson,
     pathId: id,
     order: index + 1,
-    free: freePath || index === 0,
+    free: freePath,
   }));
   return {
     id,

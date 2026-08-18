@@ -1,4 +1,5 @@
 import { DaxLab } from "@/components/DaxLab";
+import { ProGate } from "@/components/ProGate";
 import { getPublishedExercises } from "@/content/activity-store";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
@@ -10,6 +11,9 @@ export default async function DaxPage({ params }: { params: Promise<{ locale: st
   const locale = parseLocale(raw);
   const user = await requireUser(locale);
   const dict = dictionaries[locale];
+  if (!user.isPro) {
+    return <ProGate locale={locale} title={t(dict, "dax.title")} />;
+  }
   const passed = (
     getDb()
       .prepare("SELECT exercise_id FROM dax_attempts WHERE user_id = ? AND passed = 1")

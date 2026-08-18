@@ -55,17 +55,19 @@ export function ChapterCatalog({
         {paths.map((path) => {
           const copy = getPathCopy(path, locale);
           const completed = path.lessons.filter((lesson) => doneSet.has(lesson.id)).length;
+          const chapterLocked = !path.free && !isPro;
           return (
             <section key={path.id} className="gold-card p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--teal-deep)]">
                     Chapter {String(path.number).padStart(2, "0")} · {path.track}
+                    {chapterLocked ? " · Locked" : path.free ? " · Free" : " · Pro"}
                   </p>
                   <h2 className="mt-1 text-lg font-semibold text-[var(--ink)]">{copy.title}</h2>
                   <p className="mt-1 text-sm text-[var(--muted)]">{copy.subtitle}</p>
                 </div>
-                <span className="rounded-full bg-[var(--teal)] px-2 py-1 text-[11px] font-bold text-[var(--ink)]">
+                <span className="gold-fill rounded-full px-2 py-1 text-[11px]">
                   {completed}/{path.lessons.length}
                 </span>
               </div>
@@ -79,7 +81,7 @@ export function ChapterCatalog({
                       {locked ? (
                         <div className="flex items-center justify-between rounded-2xl border border-dashed border-[var(--line)] px-3 py-2 text-sm text-[var(--muted)]">
                           <span>{lessonCopy.title}</span>
-                          <Link href={`/${locale}/subscribe`} className="font-semibold text-[var(--teal-deep)]">
+                          <Link href={`/${locale}/subscribe`} className="font-semibold text-[var(--on-gold)] gold-fill rounded-full px-2 py-0.5">
                             Pro
                           </Link>
                         </div>

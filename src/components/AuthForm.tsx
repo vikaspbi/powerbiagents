@@ -77,7 +77,7 @@ export function AuthForm({
       {error && <p className="rounded-2xl bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950 dark:text-red-100">{error}</p>}
       <button
         disabled={pending}
-        className="w-full rounded-full bg-[var(--teal)] px-4 py-3 text-sm font-bold text-[var(--ink)] disabled:opacity-60"
+        className="w-full rounded-full gold-fill px-4 py-3 text-sm disabled:opacity-60"
       >
         {t(dict, mode === "login" ? "auth.submitLogin" : "auth.submitRegister")}
       </button>

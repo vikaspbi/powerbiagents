@@ -8,5 +8,14 @@ export default async function SubscribePage({ params }: { params: Promise<{ loca
   const locale = parseLocale(raw);
   const user = await requireUser(locale);
   const sub = getSubscription(user.id);
-  return <SubscribePanel locale={locale} isPro={user.isPro} periodEnd={sub?.current_period_end} />;
+  return (
+    <SubscribePanel
+      locale={locale}
+      isPro={user.isPro}
+      isAdmin={user.isAdmin}
+      periodEnd={sub?.current_period_end}
+      status={sub?.status}
+      provider={sub?.provider}
+    />
+  );
 }

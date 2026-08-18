@@ -109,7 +109,7 @@ export function QuizPlayer({
             setIndex(index + 1);
           }
         }}
-        className="mt-5 rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)] disabled:opacity-50"
+        className="mt-5 gold-fill rounded-full px-5 py-2 text-sm disabled:opacity-50"
       >
         {index + 1 >= questions.length ? t(dict, "quiz.submit") : t(dict, "quiz.next")}
       </button>

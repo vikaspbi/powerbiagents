@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppChrome, LocaleGate } from "@/components/AppChrome";
+import { FreeAdSlot } from "@/components/FreeAdSlot";
 import { getCurrentUser } from "@/lib/auth";
 import { LOCALES, parseLocale } from "@/lib/i18n";
 
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
         showAdmin={Boolean(user?.canSeeAdminPanel)}
       />
       <main className="mx-auto min-h-[80vh] max-w-6xl px-4 py-8 pb-24">{children}</main>
+      {user && <FreeAdSlot isPro={Boolean(user.isPro)} />}
     </ThemeProvider>
   );
 }

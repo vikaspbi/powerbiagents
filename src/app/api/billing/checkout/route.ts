@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     success_url: `${origin}/en/subscribe?status=success`,
     cancel_url: `${origin}/en/subscribe?status=cancel`,
     metadata: { userId: user.id, plan },
+    subscription_data: { metadata: { userId: user.id, plan } },
   });
   logPurchase("stripe_checkout", { sessionId: session.id, plan }, user.id);
   return Response.json({ url: session.url });
