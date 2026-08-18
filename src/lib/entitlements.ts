@@ -1,24 +1,26 @@
 import { getPublishedExercise } from "@/content/activity-store";
-import { LEARNING_PATHS } from "@/content/lessons";
+import { getPublishedLesson, getPublishedPath } from "@/content/publish";
 import type { PublicUser } from "@/lib/db";
 
 export function canAccessLesson(user: PublicUser | null, lessonId: string) {
-  const lesson = LEARNING_PATHS.flatMap((p) => p.lessons).find((l) => l.id === lessonId);
+  const lesson = getPublishedLesson(lessonId);
   if (!lesson) return false;
   if (lesson.free) return true;
   return Boolean(user?.isPro);
 }
 
 export function canAccessExercise(user: PublicUser | null, exerciseId: string) {
-  const exercise = getPublishedExercise(exerciseId);
-  if (!exercise) return false;
-  if (exercise.free) return true;
-  return Boolean(user?.isPro);
+  if (!user?.isPro) return false;
+  return Boolean(getPublishedExercise(exerciseId));
 }
 
 export function canAccessPath(user: PublicUser | null, pathId: string) {
-  const path = LEARNING_PATHS.find((p) => p.id === pathId);
+  const path = getPublishedPath(pathId);
   if (!path) return false;
   if (path.free) return true;
+  return Boolean(user?.isPro);
+}
+
+export function canAccessProArea(user: PublicUser | null) {
   return Boolean(user?.isPro);
 }

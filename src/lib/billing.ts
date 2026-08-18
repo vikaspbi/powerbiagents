@@ -6,10 +6,11 @@ export function grantSubscription(input: {
   provider: "stripe" | "google_play" | "demo" | "admin";
   providerCustomerId?: string | null;
   providerSubscriptionId?: string | null;
-  days: number;
+  days?: number;
+  periodEnd?: string;
   status?: string;
 }) {
-  const periodEnd = new Date(Date.now() + input.days * 86400000).toISOString();
+  const periodEnd = input.periodEnd ?? new Date(Date.now() + (input.days ?? 30) * 86400000).toISOString();
   const now = new Date().toISOString();
   getDb()
     .prepare(
@@ -40,6 +41,11 @@ export function logPurchase(provider: string, payload: unknown, userId?: string)
   getDb()
     .prepare("INSERT INTO purchase_events (id, user_id, provider, payload, created_at) VALUES (?, ?, ?, ?, ?)")
     .run(crypto.randomUUID(), userId ?? null, provider, JSON.stringify(payload), new Date().toISOString());
+}
+
+export function markCanceledAtPeriodEnd(userId: string) {
+  const now = new Date().toISOString();
+  getDb().prepare("UPDATE subscriptions SET status = 'canceled', updated_at = ? WHERE user_id = ?").run(now, userId);
 }
 
 export function demoSubscribeAllowed() {

@@ -138,6 +138,7 @@ export function getSubscription(userId: string) {
         status: string;
         current_period_end: string | null;
         provider: string;
+        provider_subscription_id: string | null;
       }
     | undefined;
 }

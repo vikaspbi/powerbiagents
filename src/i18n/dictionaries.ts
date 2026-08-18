@@ -56,7 +56,7 @@ export const en = {
     continue: "Continue learning",
     daily: "Today’s trivia",
     lab: "Open DAX lab",
-    freeHint: "Free: chapters 01–03 plus the first lesson of every later chapter. Unlock the rest with Pro.",
+    freeHint: "Free: Learn chapters 01–40. Chapters 41–47, Quiz, DAX lab, and Play unlock with Pro.",
   },
   learn: {
     title: "Learning paths",
@@ -74,7 +74,7 @@ export const en = {
     daily: "Daily trivia",
     dailyDesc: "Five questions. Resets every calendar day.",
     practice: "Practice bank",
-    practiceDesc: "All topics. Pro unlocks unlimited attempts.",
+    practiceDesc: "All topics. Included with Pro.",
     start: "Start",
     submit: "See score",
     next: "Next",
@@ -82,20 +82,20 @@ export const en = {
     wrong: "Not quite",
     score: "You scored {score}/{total}",
     xp: "+{xp} XP",
-    limit: "Free accounts get one full practice run per day. Upgrade for unlimited quizzes.",
+    limit: "Quiz is included with Pro.",
   },
   play: {
     title: "Play",
     speed: "Speed round",
     speedDesc: "45 seconds. Three lives. Same trivia, faster brain.",
     boss: "Boss quiz",
-    bossDesc: "Eight mixed questions. Unlock after three lessons or with Pro.",
+    bossDesc: "Eight mixed questions. Included with Pro.",
     startSpeed: "Play speed round",
     startBoss: "Challenge the boss",
     time: "{n}s",
     lives: "Lives {n}",
     over: "Round over",
-    locked: "Complete three lessons or go Pro to fight the boss.",
+    locked: "Play is included with Pro.",
   },
   dax: {
     title: "DAX practice lab",
@@ -116,11 +116,14 @@ export const en = {
     yearly: "Yearly",
     priceM: "Unlock everything, billed monthly",
     priceY: "Two months free vs monthly",
-    included: "All paths, unlimited quizzes, full DAX bank, certificates later.",
+    included: "All chapters, Quiz, DAX lab, Play, and an ad-free account.",
     web: "Web checkout (Stripe)",
     play: "On Android, subscriptions use Google Play Billing — required by Play policy.",
     demo: "Activate demo Pro (development only)",
     active: "You are on Pro until {date}.",
+    canceled: "Cancelled. Pro stays until {date}. No further charges after that.",
+    cancel: "Cancel auto-renew",
+    playCancel: "To stop the next Play charge, also cancel in Google Play → Payments & subscriptions.",
     restore: "Purchases restore automatically after Play verification.",
   },
   profile: {
@@ -148,8 +151,8 @@ export const en = {
     termsTitle: "Terms of use",
   },
   paywall: {
-    title: "This is a Pro lesson",
-    body: "Upgrade to continue this path, unlimited trivia, and the full DAX bank.",
+    title: "This is a Pro feature",
+    body: "Free accounts can study Learn chapters 01–40. Upgrade for chapters 41–47, Quiz, DAX lab, Play, and no ads.",
     cta: "See Pro plans",
   },
   common: {
@@ -217,7 +220,7 @@ export const hi: Dictionary = {
     continue: "सीखना जारी रखें",
     daily: "आज का ट्रिविया",
     lab: "DAX लैब खोलें",
-    freeHint: "मुफ़्त: मूल पथ, 5 ट्रिविया, 3 DAX अभ्यास।",
+    freeHint: "मुफ़्त: अध्याय 01–40। क्विज़, DAX लैब, Play और अध्याय 41–47 Pro हैं।",
   },
   learn: {
     title: "शिक्षण पथ",
@@ -282,6 +285,9 @@ export const hi: Dictionary = {
     play: "Android पर सदस्यता Google Play Billing से — Play नीति।",
     demo: "डेमो Pro चालू करें (केवल विकास)",
     active: "Pro {date} तक सक्रिय है।",
+    canceled: "रद्द। Pro {date} तक चलेगा। उसके बाद कोई कटौती नहीं।",
+    cancel: "ऑटो-रिन्यू बंद करें",
+    playCancel: "अगली Play कटौती रोकने के लिए Google Play में सदस्यता रद्द करें।",
     restore: "Play सत्यापन के बाद खरीद अपने आप जुड़ती है।",
   },
   profile: {
@@ -309,8 +315,8 @@ export const hi: Dictionary = {
     termsTitle: "उपयोग की शर्तें",
   },
   paywall: {
-    title: "यह Pro पाठ है",
-    body: "यह पथ, असीमित ट्रिविया और पूरा DAX बैंक जारी रखने के लिए अपग्रेड करें।",
+    title: "यह Pro सुविधा है",
+    body: "मुफ़्त में अध्याय 01–40। अध्याय 41–47, क्विज़, DAX लैब और Play के लिए अपग्रेड करें।",
     cta: "Pro प्लान देखें",
   },
   common: {
@@ -376,7 +382,7 @@ export const es: Dictionary = {
     continue: "Seguir aprendiendo",
     daily: "Trivia de hoy",
     lab: "Abrir lab DAX",
-    freeHint: "Plan gratuito: ruta esencial, 5 trivia y 3 ejercicios DAX.",
+    freeHint: "Gratis: capítulos 01–40. Los capítulos 41–47, Quiz, DAX y Jugar van con Pro.",
   },
   learn: {
     title: "Rutas de aprendizaje",
@@ -441,6 +447,9 @@ export const es: Dictionary = {
     play: "En Android las suscripciones usan Google Play Billing.",
     demo: "Activar Pro de demostración (solo desarrollo)",
     active: "Pro activo hasta {date}.",
+    canceled: "Cancelado. Pro sigue hasta {date}. Después no hay más cargos.",
+    cancel: "Cancelar renovación",
+    playCancel: "Para detener el próximo cargo de Play, cancela también en Google Play.",
     restore: "Las compras se restauran tras verificar Play.",
   },
   profile: {
@@ -468,8 +477,8 @@ export const es: Dictionary = {
     termsTitle: "Términos de uso",
   },
   paywall: {
-    title: "Lección Pro",
-    body: "Mejora para seguir esta ruta, trivia ilimitada y el banco DAX completo.",
+    title: "Función Pro",
+    body: "Gratis: capítulos 01–40. Mejora para 41–47, Quiz, DAX y Jugar, y sin anuncios.",
     cta: "Ver planes Pro",
   },
   common: {
@@ -535,7 +544,7 @@ export const fr: Dictionary = {
     continue: "Continuer",
     daily: "Trivia du jour",
     lab: "Ouvrir le labo DAX",
-    freeHint: "Gratuit : parcours essentiel, 5 trivia, 3 exercices DAX.",
+    freeHint: "Gratuit : chapitres 01–40. Les chapitres 41–47, Quiz, DAX et Jouer sont Pro.",
   },
   learn: {
     title: "Parcours",
@@ -600,6 +609,9 @@ export const fr: Dictionary = {
     play: "Sur Android, les abonnements passent par Google Play Billing.",
     demo: "Activer Pro démo (développement uniquement)",
     active: "Pro actif jusqu’au {date}.",
+    canceled: "Annulé. Pro reste jusqu’au {date}. Pas de prélèvement après.",
+    cancel: "Arrêter le renouvellement",
+    playCancel: "Pour stopper le prochain prélèvement Play, annulez aussi dans Google Play.",
     restore: "Les achats se restaurent après vérification Play.",
   },
   profile: {
@@ -627,8 +639,8 @@ export const fr: Dictionary = {
     termsTitle: "Conditions d’utilisation",
   },
   paywall: {
-    title: "Leçon Pro",
-    body: "Passez Pro pour ce parcours, la trivia illimitée et toute la banque DAX.",
+    title: "Fonction Pro",
+    body: "Gratuit : chapitres 01–40. Passez Pro pour 41–47, Quiz, DAX, Jouer, et sans pubs.",
     cta: "Voir Pro",
   },
   common: {

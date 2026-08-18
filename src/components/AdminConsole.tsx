@@ -15,6 +15,9 @@ interface CatalogLesson {
   images: string[];
   videos: string[];
   check: { question: string; options: string[]; answer: number };
+  free: boolean;
+  source: "builtin" | "custom";
+  hidden: boolean;
 }
 
 interface CatalogPath {
@@ -23,6 +26,9 @@ interface CatalogPath {
   track: string;
   title: string;
   subtitle: string;
+  free: boolean;
+  source: "builtin" | "custom";
+  hidden: boolean;
   lessons: CatalogLesson[];
 }
 
@@ -89,6 +95,13 @@ export function AdminConsole() {
   const [checkAnswer, setCheckAnswer] = useState(0);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
+  const [pathFree, setPathFree] = useState(true);
+  const [lessonFree, setLessonFree] = useState(true);
+  const [newPathTitle, setNewPathTitle] = useState("");
+  const [newPathSubtitle, setNewPathSubtitle] = useState("");
+  const [newPathTrack, setNewPathTrack] = useState("Custom");
+  const [newPathNumber, setNewPathNumber] = useState(48);
+  const [newPathFree, setNewPathFree] = useState(false);
 
   const load = useCallback(async () => {
     const [catalogRes, usersRes, questionRes, daxRes] = await Promise.all([
@@ -125,6 +138,7 @@ export function AdminConsole() {
     if (!path) return;
     setPathTitle(path.title);
     setPathSubtitle(path.subtitle);
+    setPathFree(path.free);
   }, [path]);
 
   useEffect(() => {
@@ -139,13 +153,14 @@ export function AdminConsole() {
     setCheckAnswer(lesson.check.answer);
     setImages(lesson.images);
     setVideos(lesson.videos);
+    setLessonFree(lesson.free);
   }, [lesson]);
 
   async function savePath() {
     const res = await fetch("/api/admin/content", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "path", id: pathId, title: pathTitle, subtitle: pathSubtitle }),
+      body: JSON.stringify({ type: "path", id: pathId, title: pathTitle, subtitle: pathSubtitle, free: pathFree }),
     });
     setMessage(res.ok ? "Chapter heading saved." : "Could not save chapter.");
     if (res.ok) void load();
@@ -168,6 +183,7 @@ export function AdminConsole() {
         checkQuestion,
         checkOptions,
         checkAnswer,
+        free: lessonFree,
       }),
     });
     setMessage(res.ok ? "Lesson saved. Learners will see it immediately." : "Could not save lesson.");
@@ -281,6 +297,47 @@ export function AdminConsole() {
           <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <div className="gold-card space-y-3 p-5">
               <h2 className="brand-mark text-2xl">Curriculum</h2>
+              <p className="text-sm text-[var(--muted)]">Add or delete chapters and lessons. Free items unlock for everyone; Pro items stay locked until subscribe.</p>
+              <div className="rounded-2xl border border-[var(--line)] p-3 space-y-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-[var(--teal-deep)]">New chapter</p>
+                <input value={newPathTitle} onChange={(e) => setNewPathTitle(e.target.value)} className={fieldClass()} placeholder="Chapter title" />
+                <textarea value={newPathSubtitle} onChange={(e) => setNewPathSubtitle(e.target.value)} className={`h-16 ${fieldClass()}`} placeholder="Subtitle" />
+                <div className="flex flex-wrap gap-2">
+                  <input value={newPathTrack} onChange={(e) => setNewPathTrack(e.target.value)} className={`flex-1 ${fieldClass()}`} placeholder="Track" />
+                  <input type="number" value={newPathNumber} onChange={(e) => setNewPathNumber(Number(e.target.value))} className="w-24 rounded-xl border border-[var(--line)] bg-transparent px-2 py-1" />
+                </div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={newPathFree} onChange={(e) => setNewPathFree(e.target.checked)} />
+                  Free for all learners
+                </label>
+                <button
+                  type="button"
+                  className="btn-gold rounded-full px-4 py-2 text-sm"
+                  onClick={async () => {
+                    const res = await fetch("/api/admin/content", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        action: "createPath",
+                        title: newPathTitle,
+                        subtitle: newPathSubtitle,
+                        track: newPathTrack,
+                        number: newPathNumber,
+                        free: newPathFree,
+                      }),
+                    });
+                    const payload = (await res.json()) as { error?: string; id?: string };
+                    setMessage(res.ok ? "Chapter added for every learner." : payload.error || "Could not add chapter.");
+                    if (res.ok) {
+                      setNewPathTitle("");
+                      setNewPathSubtitle("");
+                      void load();
+                    }
+                  }}
+                >
+                  Add chapter
+                </button>
+              </div>
               <label className="block text-sm font-medium">
                 Chapter
                 <select
@@ -295,6 +352,7 @@ export function AdminConsole() {
                   {paths.map((item) => (
                     <option key={item.id} value={item.id}>
                       {String(item.number).padStart(2, "0")} · {item.title}
+                      {item.hidden ? " (removed)" : item.free ? " · Free" : " · Pro"}
                     </option>
                   ))}
                 </select>
@@ -303,9 +361,50 @@ export function AdminConsole() {
                 <>
                   <input value={pathTitle} onChange={(e) => setPathTitle(e.target.value)} className={fieldClass()} />
                   <textarea value={pathSubtitle} onChange={(e) => setPathSubtitle(e.target.value)} className={`h-20 ${fieldClass()}`} />
-                  <button type="button" onClick={() => void savePath()} className="btn-gold rounded-full px-4 py-2 text-sm">
-                    Save chapter heading
-                  </button>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={pathFree} onChange={(e) => setPathFree(e.target.checked)} />
+                    Free chapter (unchecked = Pro lock, including all current lessons)
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => void savePath()} className="btn-gold rounded-full px-4 py-2 text-sm">
+                      Save chapter
+                    </button>
+                    {path.hidden ? (
+                      <button
+                        type="button"
+                        className="rounded-full border border-[var(--line)] px-4 py-2 text-sm"
+                        onClick={async () => {
+                          await fetch("/api/admin/content", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ type: "path", id: path.id, restore: true }),
+                          });
+                          setMessage("Chapter restored.");
+                          void load();
+                        }}
+                      >
+                        Restore chapter
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="rounded-full border border-red-400/40 px-4 py-2 text-sm text-red-700 dark:text-red-300"
+                        onClick={async () => {
+                          await fetch("/api/admin/content", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ type: "path", id: path.id }),
+                          });
+                          setPathId("");
+                          setLessonId("");
+                          setMessage("Chapter removed for learners.");
+                          void load();
+                        }}
+                      >
+                        Delete chapter
+                      </button>
+                    )}
+                  </div>
                   <label className="block text-sm font-medium">
                     Lesson
                     <select className={`mt-1 ${fieldClass()}`} value={lessonId} onChange={(e) => setLessonId(e.target.value)}>
@@ -313,10 +412,37 @@ export function AdminConsole() {
                       {path.lessons.map((item) => (
                         <option key={item.id} value={item.id}>
                           {item.title}
+                          {item.hidden ? " (removed)" : item.free ? " · Free" : " · Pro"}
                         </option>
                       ))}
                     </select>
                   </label>
+                  <button
+                    type="button"
+                    className="rounded-full border border-[var(--line)] px-4 py-2 text-sm"
+                    onClick={async () => {
+                      const res = await fetch("/api/admin/content", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          action: "createLesson",
+                          pathId: path.id,
+                          title: "New lesson",
+                          bodyText: "Write the lesson here.",
+                          takeaway: "Key takeaway",
+                          free: pathFree,
+                        }),
+                      });
+                      const payload = (await res.json()) as { error?: string; id?: string };
+                      setMessage(res.ok ? "Lesson added." : payload.error || "Could not add lesson.");
+                      if (res.ok && payload.id) {
+                        await load();
+                        setLessonId(payload.id);
+                      }
+                    }}
+                  >
+                    Add lesson to this chapter
+                  </button>
                 </>
               )}
             </div>
@@ -326,6 +452,10 @@ export function AdminConsole() {
                 <label className="text-sm">
                   Minutes
                   <input type="number" min={1} value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} className="ml-2 w-20 rounded-xl border border-[var(--line)] bg-transparent px-2 py-1" />
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={lessonFree} onChange={(e) => setLessonFree(e.target.checked)} />
+                  Free lesson (unchecked = Pro)
                 </label>
                 <textarea value={bodyText} onChange={(e) => setBodyText(e.target.value)} className={`h-40 ${fieldClass()}`} placeholder="Paragraphs separated by a blank line" />
                 <textarea value={example} onChange={(e) => setExample(e.target.value)} className={`h-24 ${fieldClass()}`} placeholder="Example" />
@@ -360,9 +490,45 @@ export function AdminConsole() {
                     </button>
                   ))}
                 </div>
-                <button type="button" onClick={() => void saveLesson()} className="btn-gold rounded-full px-5 py-2 text-sm">
-                  Save lesson
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" onClick={() => void saveLesson()} className="btn-gold rounded-full px-5 py-2 text-sm">
+                    Save lesson
+                  </button>
+                  {lesson.hidden ? (
+                    <button
+                      type="button"
+                      className="rounded-full border border-[var(--line)] px-4 py-2 text-sm"
+                      onClick={async () => {
+                        await fetch("/api/admin/content", {
+                          method: "DELETE",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ type: "lesson", id: lesson.id, restore: true }),
+                        });
+                        setMessage("Lesson restored.");
+                        void load();
+                      }}
+                    >
+                      Restore lesson
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="rounded-full border border-red-400/40 px-4 py-2 text-sm text-red-700 dark:text-red-300"
+                      onClick={async () => {
+                        await fetch("/api/admin/content", {
+                          method: "DELETE",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ type: "lesson", id: lesson.id }),
+                        });
+                        setLessonId("");
+                        setMessage("Lesson removed for learners.");
+                        void load();
+                      }}
+                    >
+                      Delete lesson
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </section>

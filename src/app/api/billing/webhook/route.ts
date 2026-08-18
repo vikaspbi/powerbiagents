@@ -34,5 +34,23 @@ export async function POST(request: Request) {
       });
     }
   }
+  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+    const sub = event.data.object;
+    const userId = sub.metadata?.userId;
+    if (userId) {
+      const end = (sub as { current_period_end?: number }).current_period_end;
+      const canceled = event.type === "customer.subscription.deleted" || Boolean(sub.cancel_at_period_end);
+      grantSubscription({
+        userId,
+        plan: sub.items.data[0]?.price.recurring?.interval === "year" ? "yearly" : "monthly",
+        provider: "stripe",
+        providerCustomerId: typeof sub.customer === "string" ? sub.customer : null,
+        providerSubscriptionId: sub.id,
+        periodEnd: end ? new Date(end * 1000).toISOString() : undefined,
+        days: end ? undefined : 30,
+        status: canceled ? "canceled" : sub.status,
+      });
+    }
+  }
   return Response.json({ received: true });
 }

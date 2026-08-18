@@ -1,4 +1,5 @@
 import { QuizPlayer } from "@/components/QuizPlayer";
+import { ProGate } from "@/components/ProGate";
 import { getPublishedQuizBank } from "@/content/activity-store";
 import { shuffleDaily } from "@/content/quizzes";
 import { dictionaries, t } from "@/i18n/dictionaries";
@@ -17,6 +18,9 @@ export default async function QuizPage({
   const locale = parseLocale(raw);
   const user = await requireUser(locale);
   const dict = dictionaries[locale];
+  if (!user.isPro) {
+    return <ProGate locale={locale} title={t(dict, "quiz.title")} />;
+  }
 
   if (mode === "daily") {
     return (
