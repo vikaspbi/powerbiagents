@@ -1,37 +1,41 @@
-# Report Desk
+# LearnInPowerBI
 
-A **non-technical guided interface** for running a Power BI delivery project through six specialist agents:
+A mobile-ready learning app for **Power BI concepts, DAX practice, quizzes, and games**. Independent product — not affiliated with Microsoft.
 
-1. **Requirements & Proposal** — requirements matrix (+ proposal for new projects)
-2. **Architecture & Layout** — data-flow diagram + page wireframes
-3. **Data Feasibility** — coverage check against real schema/sample
-4. **Build Guidance** — Power Query, relationships, DAX, visuals checklist
-5. **QA / Validation** — Excel-ready test cases (human go/no-go)
-6. **Documentation** — compiled technical doc from prior approvals
+## Features
 
-Each stage is a **living document**: chat in plain English, review the output on the right, ask for targeted changes, then **Approve & continue**.
+- Learning paths (essentials, data literacy, DAX) in **English, हिन्दी, Español, Français**
+- Light / dark / system theme
+- Daily trivia, practice quizzes, speed round, boss quiz
+- DAX formula lab with a teaching engine (SUM, CALCULATE, COUNTROWS, …) on a sample Sales model
+- Accounts, XP, streaks, progress stored on the server (SQLite in development)
+- Subscriptions: Stripe Checkout on web; Google Play Billing token verify API for Android
+- Account deletion (Play policy)
 
 ## Quick start
 
 ```bash
+cp .env.example .env
 npm install
+npm run test:dax
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Create an account, then use **Activate demo Pro** on the subscribe page in development.
 
-1. Click **Add API key** and paste an OpenAI API key (stored only in your browser).
-2. Create a project and paste your report idea / notes / RSD.
-3. Walk the six stages. Download markdown or JSON handoffs anytime.
+## Scripts
 
-## Notes for non-technical users
+| Script | Purpose |
+|---|---|
+| `npm run dev` | Next.js dev server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint |
+| `npm run test:dax` | Teaching-engine unit checks |
 
-- You do **not** need to know Power BI formulas to use Stages 1–2 and 5–6.
-- For Stage 3, ask your data person for a table/column list and paste it in.
-- Stages stay editable after approval — say “change R4…” and only that item updates.
+## Android / Play Store
 
-## Tech
+See `store/PLAY_STORE.md` and `mobile/android/PlayBillingBridge.kt`. The app is a Next.js backend + responsive UI designed to run inside a Capacitor / TWA WebView pointed at your hosted URL so auth cookies and `/api` routes work.
 
-- Next.js (App Router) + TypeScript + Tailwind
-- OpenAI Chat Completions API (your key)
-- Project state in browser `localStorage`
+## Environment
+
+Copy `.env.example`. Set `JWT_SECRET` in production. Configure Stripe only for web. For Play, verify purchases with the Google Play Developer API (the verify route is stubbed until a service account is provided).
