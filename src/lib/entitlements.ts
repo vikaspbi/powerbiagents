@@ -1,4 +1,4 @@
-import { DAX_EXERCISES } from "@/content/exercises";
+import { getPublishedExercise } from "@/content/activity-store";
 import { LEARNING_PATHS } from "@/content/lessons";
 import type { PublicUser } from "@/lib/db";
 
@@ -10,7 +10,7 @@ export function canAccessLesson(user: PublicUser | null, lessonId: string) {
 }
 
 export function canAccessExercise(user: PublicUser | null, exerciseId: string) {
-  const exercise = DAX_EXERCISES.find((e) => e.id === exerciseId);
+  const exercise = getPublishedExercise(exerciseId);
   if (!exercise) return false;
   if (exercise.free) return true;
   return Boolean(user?.isPro);

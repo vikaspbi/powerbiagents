@@ -91,6 +91,30 @@ function createDb() {
       url TEXT NOT NULL,
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS quiz_items (
+      id TEXT PRIMARY KEY,
+      topic TEXT NOT NULL DEFAULT 'general',
+      answer INTEGER NOT NULL DEFAULT 0,
+      banks TEXT NOT NULL,
+      copy TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS dax_items (
+      id TEXT PRIMARY KEY,
+      free INTEGER NOT NULL DEFAULT 1,
+      expected REAL NOT NULL,
+      starter TEXT NOT NULL,
+      copy TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS hidden_items (
+      kind TEXT NOT NULL,
+      id TEXT NOT NULL,
+      PRIMARY KEY (kind, id)
+    );
   `);
   migrateUsers(db);
   return db;

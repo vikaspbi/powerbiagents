@@ -9,8 +9,22 @@ export interface QuizQuestion {
   answer: number;
 }
 
+export type QuizBank = "daily" | "practice" | "play";
+
+export const QUIZ_BANKS: QuizBank[] = ["daily", "practice", "play"];
+
 export function getQuizCopy(question: QuizQuestion, locale: Locale) {
   return question.copy[locale] ?? question.copy.en;
+}
+
+export function shuffleDaily(questions: QuizQuestion[], date = new Date()): QuizQuestion[] {
+  const seed = Number(date.toISOString().slice(0, 10).replaceAll("-", ""));
+  const copy = [...questions];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = (seed + i * 17) % (i + 1);
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(5, copy.length));
 }
 
 export const QUIZ_BANK: QuizQuestion[] = [
@@ -321,11 +335,5 @@ export const QUIZ_BANK: QuizQuestion[] = [
 ];
 
 export function dailyQuestions(date = new Date()): QuizQuestion[] {
-  const seed = Number(date.toISOString().slice(0, 10).replaceAll("-", ""));
-  const copy = [...QUIZ_BANK];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = (seed + i * 17) % (i + 1);
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy.slice(0, 5);
+  return shuffleDaily(QUIZ_BANK, date);
 }

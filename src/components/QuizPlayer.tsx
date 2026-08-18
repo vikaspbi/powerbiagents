@@ -52,6 +52,10 @@ export function QuizPlayer({
     );
   }
 
+  if (questions.length === 0) {
+    return <p className="text-sm text-[var(--muted)]">No questions in this bank yet.</p>;
+  }
+
   if (!question || !copy || done) return null;
 
   return (

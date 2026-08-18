@@ -1,6 +1,6 @@
 import { isSuperAdminEmail } from "@/lib/admin";
+import { addOrPromoteAdmin, grantAdminProById, listUsersForAdmin, setUserAdmin } from "@/lib/admin-users";
 import { getDb, toPublicUser, type UserRow } from "@/lib/db";
-import { grantAdminProById, listUsersForAdmin, setUserAdmin } from "@/lib/admin-users";
 import { jsonError } from "@/lib/http";
 import { requireSuperAdmin } from "@/lib/require-super-admin";
 
@@ -27,4 +27,28 @@ export async function POST(request: Request) {
     .prepare("SELECT plan, status, current_period_end FROM subscriptions WHERE user_id = ?")
     .get(row.id) as { plan: string; status: string; current_period_end: string | null } | undefined;
   return Response.json({ user: toPublicUser(updated, sub) });
+}
+
+export async function PUT(request: Request) {
+  const admin = await requireSuperAdmin();
+  if (!admin) return jsonError("Not found", 404);
+  const body = (await request.json().catch(() => null)) as {
+    email?: string;
+    displayName?: string;
+    password?: string;
+  } | null;
+  try {
+    const result = await addOrPromoteAdmin({
+      email: body?.email || "",
+      displayName: body?.displayName,
+      password: body?.password,
+    });
+    return Response.json({
+      ok: true,
+      created: result.created,
+      users: listUsersForAdmin(),
+    });
+  } catch (error) {
+    return jsonError(error instanceof Error ? error.message : "Could not add admin.");
+  }
 }

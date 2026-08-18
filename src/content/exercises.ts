@@ -1,11 +1,21 @@
 import type { Locale } from "@/lib/i18n";
 
+export interface DaxExerciseCopy {
+  title: string;
+  prompt: string;
+  hint: string;
+}
+
 export interface DaxExercise {
   id: string;
   free: boolean;
   expected: number;
   starter: string;
-  copy: Record<Locale, { title: string; prompt: string; hint: string }>;
+  copy: { en: DaxExerciseCopy } & Partial<Record<Locale, DaxExerciseCopy>>;
+}
+
+export function getExerciseCopy(exercise: DaxExercise, locale: Locale) {
+  return exercise.copy[locale] ?? exercise.copy.en;
 }
 
 export const DAX_EXERCISES: DaxExercise[] = [

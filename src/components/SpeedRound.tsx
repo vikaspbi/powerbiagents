@@ -27,8 +27,8 @@ export function SpeedRound({ locale, questions }: { locale: Locale; questions: Q
     return () => window.clearInterval(id);
   }, [over]);
 
-  const question = questions[index % questions.length];
-  const copy = getQuizCopy(question, locale);
+  const question = questions[index % Math.max(questions.length, 1)];
+  const copy = question ? getQuizCopy(question, locale) : null;
 
   function pick(i: number) {
     if (over) return;
@@ -40,6 +40,10 @@ export function SpeedRound({ locale, questions }: { locale: Locale; questions: Q
       if (nextLives <= 0) setOver(true);
     }
     setIndex((n) => n + 1);
+  }
+
+  if (questions.length === 0 || !question || !copy) {
+    return <p className="text-sm text-[var(--muted)]">No play questions are published yet.</p>;
   }
 
   if (over) {

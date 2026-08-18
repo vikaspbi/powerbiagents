@@ -1,4 +1,5 @@
 import { DaxLab } from "@/components/DaxLab";
+import { getPublishedExercises } from "@/content/activity-store";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
 import { parseLocale } from "@/lib/i18n";
@@ -18,7 +19,7 @@ export default async function DaxPage({ params }: { params: Promise<{ locale: st
   return (
     <div className="space-y-6">
       <h1 className="brand-mark text-4xl">{t(dict, "dax.title")}</h1>
-      <DaxLab locale={locale} isPro={user.isPro} passedIds={passed} />
+      <DaxLab locale={locale} isPro={user.isPro} passedIds={passed} exercises={getPublishedExercises()} />
     </div>
   );
 }
