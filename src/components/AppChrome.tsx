@@ -27,10 +27,12 @@ export function AppChrome({
   locale,
   signedIn,
   isPro,
+  showAdmin = false,
 }: {
   locale: Locale;
   signedIn: boolean;
   isPro: boolean;
+  showAdmin?: boolean;
 }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
@@ -78,12 +80,19 @@ export function AppChrome({
               <option value="dark">{t(dict, "settings.dark")}</option>
             </select>
             {signedIn ? (
-              <Link
-                href={`/${locale}/subscribe`}
-                className="hidden rounded-full bg-[var(--teal)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] sm:inline"
-              >
-                {isPro ? "Pro" : t(dict, "nav.subscribe")}
-              </Link>
+              <>
+                {showAdmin && (
+                  <Link href={`/${locale}/admin`} className="text-sm font-bold text-[var(--teal-deep)]">
+                    {t(dict, "nav.admin")}
+                  </Link>
+                )}
+                <Link
+                  href={`/${locale}/subscribe`}
+                  className="hidden rounded-full bg-[var(--teal)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] sm:inline"
+                >
+                  {isPro ? "Pro" : t(dict, "nav.subscribe")}
+                </Link>
+              </>
             ) : (
               <Link href={`/${locale}/login`} className="text-sm font-medium text-[var(--teal)]">
                 {t(dict, "nav.login")}

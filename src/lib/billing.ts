@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 export function grantSubscription(input: {
   userId: string;
   plan: "monthly" | "yearly";
-  provider: "stripe" | "google_play" | "demo";
+  provider: "stripe" | "google_play" | "demo" | "admin";
   providerCustomerId?: string | null;
   providerSubscriptionId?: string | null;
   days: number;

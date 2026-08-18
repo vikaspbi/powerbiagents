@@ -3,7 +3,7 @@ import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
 import { parseLocale } from "@/lib/i18n";
 import { requireUser } from "@/lib/require-user";
-import { LEARNING_PATHS } from "@/content/lessons";
+import { getPublishedPaths } from "@/content/publish";
 
 export default async function LearnPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -13,7 +13,8 @@ export default async function LearnPage({ params }: { params: Promise<{ locale: 
   const done = (
     getDb().prepare("SELECT lesson_id FROM lesson_progress WHERE user_id = ?").all(user.id) as { lesson_id: string }[]
   ).map((row) => row.lesson_id);
-  const lessonCount = LEARNING_PATHS.reduce((sum, path) => sum + path.lessons.length, 0);
+  const published = getPublishedPaths();
+  const lessonCount = published.reduce((sum, path) => sum + path.lessons.length, 0);
 
   return (
     <div className="space-y-6 pb-16">
@@ -26,7 +27,7 @@ export default async function LearnPage({ params }: { params: Promise<{ locale: 
         </p>
         {!user.isPro && <p className="mt-3 text-sm text-[var(--muted)]">{t(dict, "dash.freeHint")}</p>}
       </section>
-      <ChapterCatalog locale={locale} isPro={user.isPro} done={done} />
+      <ChapterCatalog locale={locale} isPro={user.isPro} done={done} paths={published} />
     </div>
   );
 }

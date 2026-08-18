@@ -48,6 +48,17 @@ export function LessonView({
           {paragraph}
         </p>
       ))}
+      {(copy.images?.length ?? 0) > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {copy.images?.map((src) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={src} src={src} alt="" className="w-full rounded-2xl border border-[var(--line)]" />
+          ))}
+        </div>
+      )}
+      {copy.videos?.map((src) => (
+        <video key={src} src={src} controls className="w-full rounded-2xl border border-[var(--line)]" />
+      ))}
       {copy.example && (
         <div className="rounded-[24px] border border-[var(--line)] bg-[var(--sand)] p-5 dark:bg-[var(--teal-soft)]">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--teal-deep)]">

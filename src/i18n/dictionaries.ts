@@ -17,6 +17,7 @@ export const en = {
     login: "Log in",
     register: "Create account",
     logout: "Log out",
+    admin: "Admin",
   },
   landing: {
     kicker: "47-chapter Power BI academy",
@@ -177,6 +178,7 @@ export const hi: Dictionary = {
     login: "लॉग इन",
     register: "खाता बनाएँ",
     logout: "लॉग आउट",
+    admin: "एडमिन",
   },
   landing: {
     kicker: "Play Store के लिए तैयार",
@@ -335,6 +337,7 @@ export const es: Dictionary = {
     login: "Entrar",
     register: "Crear cuenta",
     logout: "Salir",
+    admin: "Admin",
   },
   landing: {
     kicker: "Lista para Play Store",
@@ -493,6 +496,7 @@ export const fr: Dictionary = {
     login: "Connexion",
     register: "Créer un compte",
     logout: "Déconnexion",
+    admin: "Admin",
   },
   landing: {
     kicker: "Prête pour le Play Store",

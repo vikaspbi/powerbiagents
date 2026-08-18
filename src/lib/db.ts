@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { canSeeAdminPanel, isSuperAdminEmail } from "@/lib/admin";
 
 const globalForDb = globalThis as unknown as { lpbiDb?: DatabaseSync };
 
@@ -76,8 +77,30 @@ function createDb() {
       payload TEXT NOT NULL,
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS content_overrides (
+      key TEXT PRIMARY KEY,
+      payload TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS media_files (
+      id TEXT PRIMARY KEY,
+      filename TEXT NOT NULL,
+      mime TEXT NOT NULL,
+      url TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    );
   `);
+  migrateUsers(db);
   return db;
+}
+
+function migrateUsers(db: DatabaseSync) {
+  const cols = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
+  if (!cols.some((col) => col.name === "is_admin")) {
+    db.exec("ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0");
+  }
 }
 
 export function getDb() {
@@ -98,6 +121,7 @@ export interface UserRow {
   streak: number;
   last_active_date: string | null;
   created_at: string;
+  is_admin: number;
 }
 
 export interface PublicUser {
@@ -113,13 +137,17 @@ export interface PublicUser {
   plan: string;
   subscriptionStatus: string;
   isPro: boolean;
+  isAdmin: boolean;
+  canSeeAdminPanel: boolean;
 }
 
 export function toPublicUser(user: UserRow, sub?: { plan: string; status: string; current_period_end: string | null } | null): PublicUser {
+  const isAdmin = user.is_admin === 1 || isSuperAdminEmail(user.email);
   const active =
     !!sub &&
     (sub.status === "active" || sub.status === "trialing") &&
     (!sub.current_period_end || new Date(sub.current_period_end).getTime() > Date.now());
+  const isPro = active || isAdmin;
   return {
     id: user.id,
     email: user.email,
@@ -130,8 +158,10 @@ export function toPublicUser(user: UserRow, sub?: { plan: string; status: string
     streak: user.streak,
     lastActiveDate: user.last_active_date,
     createdAt: user.created_at,
-    plan: active ? sub!.plan : "free",
-    subscriptionStatus: sub?.status ?? "none",
-    isPro: active,
+    plan: isAdmin ? "admin" : active ? sub!.plan : "free",
+    subscriptionStatus: isAdmin ? "admin" : (sub?.status ?? "none"),
+    isPro,
+    isAdmin,
+    canSeeAdminPanel: canSeeAdminPanel(user.email),
   };
 }

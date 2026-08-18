@@ -1,6 +1,8 @@
 import { compare, hash } from "bcryptjs";
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
+import { isSuperAdminEmail } from "@/lib/admin";
+import { grantSubscription } from "@/lib/billing";
 import { getDb, toPublicUser, type PublicUser, type UserRow } from "@/lib/db";
 import { parseLocale, type Locale } from "@/lib/i18n";
 
@@ -68,10 +70,24 @@ export function getUserByEmail(email: string): UserRow | undefined {
 export function getPublicUser(id: string): PublicUser | null {
   const user = getUserById(id);
   if (!user) return null;
+  if (isSuperAdminEmail(user.email) && user.is_admin !== 1) {
+    getDb().prepare("UPDATE users SET is_admin = 1 WHERE id = ?").run(user.id);
+    user.is_admin = 1;
+    grantAdminPro(user.id);
+  }
   const sub = getDb()
     .prepare("SELECT plan, status, current_period_end FROM subscriptions WHERE user_id = ?")
     .get(id) as { plan: string; status: string; current_period_end: string | null } | undefined;
   return toPublicUser(user, sub);
+}
+
+function grantAdminPro(userId: string) {
+  grantSubscription({
+    userId,
+    plan: "yearly",
+    provider: "admin",
+    days: 3650,
+  });
 }
 
 export async function getCurrentUser(): Promise<PublicUser | null> {
@@ -88,12 +104,14 @@ export function createUser(input: {
 }) {
   const id = crypto.randomUUID();
   const createdAt = new Date().toISOString();
+  const isAdmin = isSuperAdminEmail(input.email) ? 1 : 0;
   getDb()
     .prepare(
-      `INSERT INTO users (id, email, password_hash, display_name, locale, theme, xp, streak, created_at)
-       VALUES (?, ?, ?, ?, ?, 'system', 0, 0, ?)`,
+      `INSERT INTO users (id, email, password_hash, display_name, locale, theme, xp, streak, created_at, is_admin)
+       VALUES (?, ?, ?, ?, ?, 'system', 0, 0, ?, ?)`,
     )
-    .run(id, input.email.toLowerCase(), input.passwordHash, input.displayName, input.locale, createdAt);
+    .run(id, input.email.toLowerCase(), input.passwordHash, input.displayName, input.locale, createdAt, isAdmin);
+  if (isAdmin) grantAdminPro(id);
   return id;
 }
 

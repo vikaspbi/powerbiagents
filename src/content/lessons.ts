@@ -5,7 +5,7 @@ import { CURRICULUM_PART_D } from "@/content/part-d";
 import { CURRICULUM_PART_E } from "@/content/part-e";
 import type { LearningPath, Lesson } from "@/content/schema";
 
-export type { LearningPath, Lesson, LessonCopy } from "@/content/schema";
+export type { LearningPath, Lesson, LessonCopy, PathCopy } from "@/content/schema";
 export { getLessonCopy, getPathCopy } from "@/content/schema";
 
 export const LEARNING_PATHS: LearningPath[] = [

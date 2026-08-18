@@ -7,6 +7,8 @@ export interface LessonCopy {
   exampleTitle?: string;
   example?: string;
   takeaway: string;
+  images?: string[];
+  videos?: string[];
   check: { question: string; options: string[]; answer: number };
 }
 

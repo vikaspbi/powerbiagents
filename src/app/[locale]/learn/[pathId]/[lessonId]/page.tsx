@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LessonView } from "@/components/LessonView";
-import { getPath } from "@/content/lessons";
+import { getPublishedPath } from "@/content/publish";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
 import { canAccessLesson } from "@/lib/entitlements";
@@ -16,7 +16,7 @@ export default async function LessonPage({
   const { locale: raw, pathId, lessonId } = await params;
   const locale = parseLocale(raw);
   const user = await requireUser(locale);
-  const path = getPath(pathId);
+  const path = getPublishedPath(pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) notFound();
   const dict = dictionaries[locale];

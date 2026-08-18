@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { LEARNING_PATHS, TRACKS, getLessonCopy, getPathCopy } from "@/content/lessons";
+import { getLessonCopy, getPathCopy, type LearningPath } from "@/content/lessons";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n";
 
@@ -10,17 +10,20 @@ export function ChapterCatalog({
   locale,
   isPro,
   done,
+  paths: incoming,
 }: {
   locale: Locale;
   isPro: boolean;
   done: string[];
+  paths: LearningPath[];
 }) {
   const dict = dictionaries[locale];
   const doneSet = useMemo(() => new Set(done), [done]);
   const [query, setQuery] = useState("");
   const [track, setTrack] = useState("All");
+  const tracks = useMemo(() => [...new Set(incoming.map((path) => path.track))], [incoming]);
 
-  const paths = LEARNING_PATHS.filter((path) => {
+  const paths = incoming.filter((path) => {
     const copy = getPathCopy(path, locale);
     const hay = `${path.number} ${copy.title} ${copy.subtitle} ${path.track}`.toLowerCase();
     const matchesTrack = track === "All" || path.track === track;
@@ -43,7 +46,7 @@ export function ChapterCatalog({
           className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] px-4 py-3 text-sm"
         >
           <option>All</option>
-          {TRACKS.map((item) => (
+          {tracks.map((item) => (
             <option key={item}>{item}</option>
           ))}
         </select>
