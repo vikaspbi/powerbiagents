@@ -156,7 +156,7 @@ export function DaxLab({
               className="mt-4 h-48 w-full rounded-2xl border border-[var(--line)] bg-transparent p-4 font-mono text-sm"
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              <button type="button" onClick={() => void run()} className="rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-semibold text-white">
+              <button type="button" onClick={() => void run()} className="rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)]">
                 {t(dict, "dax.run")}
               </button>
               {exercise && (

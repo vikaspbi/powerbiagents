@@ -4,8 +4,8 @@
   "description": "Learn Power BI, DAX, and analytics with quizzes and a practice lab.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#e8eef0",
-  "theme_color": "#0b5f6b",
+  "theme_color": "#f0c419",
+  "background_color": "#fff6d8",
   "icons": [
     {
       "src": "/icon.svg",

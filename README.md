@@ -4,8 +4,9 @@ A mobile-ready learning app for **Power BI concepts, DAX practice, quizzes, and 
 
 ## Features
 
-- Learning paths (essentials, data literacy, DAX) in **English, हिन्दी, Español, Français**
-- Light / dark / system theme
+- **47-chapter curriculum** with explanations and worked examples (Power Query through Fabric, RLS, interviews, PL-300)
+- UI in **English, हिन्दी, Español, Français** (lesson text is English with locale fallback)
+- Gold / yellow light and dark theme
 - Daily trivia, practice quizzes, speed round, boss quiz
 - DAX formula lab with a teaching engine (SUM, CALCULATE, COUNTROWS, …) on a sample Sales model
 - Accounts, XP, streaks, progress stored on the server (SQLite in development)

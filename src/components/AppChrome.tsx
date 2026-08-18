@@ -80,7 +80,7 @@ export function AppChrome({
             {signedIn ? (
               <Link
                 href={`/${locale}/subscribe`}
-                className="hidden rounded-full bg-[var(--teal)] px-3 py-1.5 text-xs font-semibold text-white sm:inline"
+                className="hidden rounded-full bg-[var(--teal)] px-3 py-1.5 text-xs font-bold text-[var(--ink)] sm:inline"
               >
                 {isPro ? "Pro" : t(dict, "nav.subscribe")}
               </Link>
@@ -121,7 +121,7 @@ export function AppChrome({
               <Link
                 key={tab.href}
                 href={href}
-                className={`rounded-full px-4 py-2 text-sm ${active ? "bg-[var(--teal)] text-white" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
+                className={`rounded-full px-4 py-2 text-sm ${active ? "bg-[var(--teal)] font-bold text-[var(--ink)]" : "text-[var(--muted)] hover:text-[var(--ink)]"}`}
               >
                 {t(dict, tab.key)}
               </Link>

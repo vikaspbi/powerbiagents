@@ -25,7 +25,7 @@ export default async function LessonPage({
       <div className="rounded-[28px] border border-[var(--line)] bg-[var(--panel)] p-8">
         <h1 className="text-2xl font-semibold">{t(dict, "paywall.title")}</h1>
         <p className="mt-2 text-[var(--muted)]">{t(dict, "paywall.body")}</p>
-        <Link href={`/${locale}/subscribe`} className="mt-4 inline-block rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-semibold text-white">
+        <Link href={`/${locale}/subscribe`} className="mt-4 inline-block rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)]">
           {t(dict, "paywall.cta")}
         </Link>
       </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { dictionaries, t } from "@/i18n/dictionaries";
-import type { QuizQuestion } from "@/content/quizzes";
+import { getQuizCopy, type QuizQuestion } from "@/content/quizzes";
 import type { Locale } from "@/lib/i18n";
 
 export function SpeedRound({ locale, questions }: { locale: Locale; questions: QuizQuestion[] }) {
@@ -28,7 +28,7 @@ export function SpeedRound({ locale, questions }: { locale: Locale; questions: Q
   }, [over]);
 
   const question = questions[index % questions.length];
-  const copy = question.copy[locale];
+  const copy = getQuizCopy(question, locale);
 
   function pick(i: number) {
     if (over) return;

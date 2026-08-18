@@ -35,7 +35,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         <Link href={`/${locale}/settings`} className="rounded-full border border-[var(--line)] px-4 py-2 text-sm">
           {t(dict, "nav.settings")}
         </Link>
-        <Link href={`/${locale}/subscribe`} className="rounded-full bg-[var(--teal)] px-4 py-2 text-sm font-semibold text-white">
+        <Link href={`/${locale}/subscribe`} className="rounded-full bg-[var(--teal)] px-4 py-2 text-sm font-bold text-[var(--ink)]">
           {t(dict, "nav.subscribe")}
         </Link>
         <LogoutButton locale={locale} />
