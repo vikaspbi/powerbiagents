@@ -1,4 +1,4 @@
-import { getExercise } from "@/content/exercises";
+import { getPublishedExercise } from "@/content/activity-store";
 import { getCurrentUser, touchStreak } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { evaluateDax, valuesMatch } from "@/lib/dax-engine";
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   let passed = false;
   let expected: number | undefined;
   if (exerciseId) {
-    const exercise = getExercise(exerciseId);
+    const exercise = getPublishedExercise(exerciseId);
     expected = exercise?.expected;
     passed = Boolean(evaluated.ok && exercise && typeof evaluated.value === "number" && valuesMatch(evaluated.value, exercise.expected));
     getDb()

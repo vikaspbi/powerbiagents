@@ -1,5 +1,6 @@
 import { QuizPlayer } from "@/components/QuizPlayer";
-import { dailyQuestions, QUIZ_BANK } from "@/content/quizzes";
+import { getPublishedQuizBank } from "@/content/activity-store";
+import { shuffleDaily } from "@/content/quizzes";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { parseLocale } from "@/lib/i18n";
 import { requireUser } from "@/lib/require-user";
@@ -21,7 +22,7 @@ export default async function QuizPage({
     return (
       <div className="space-y-4">
         <h1 className="brand-mark text-4xl">{t(dict, "quiz.daily")}</h1>
-        <QuizPlayer locale={locale} quizId="daily" questions={dailyQuestions()} />
+        <QuizPlayer locale={locale} quizId="daily" questions={shuffleDaily(getPublishedQuizBank("daily"))} />
       </div>
     );
   }
@@ -29,7 +30,7 @@ export default async function QuizPage({
     return (
       <div className="space-y-4">
         <h1 className="brand-mark text-4xl">{t(dict, "quiz.practice")}</h1>
-        <QuizPlayer locale={locale} quizId="practice" questions={QUIZ_BANK} />
+        <QuizPlayer locale={locale} quizId="practice" questions={getPublishedQuizBank("practice")} />
       </div>
     );
   }

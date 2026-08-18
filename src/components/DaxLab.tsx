@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DAX_EXERCISES, type DaxExercise } from "@/content/exercises";
+import { getExerciseCopy, type DaxExercise } from "@/content/exercises";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import { SALES_MODEL } from "@/lib/sample-model";
@@ -10,19 +10,23 @@ export function DaxLab({
   locale,
   isPro,
   passedIds,
+  exercises,
 }: {
   locale: Locale;
   isPro: boolean;
   passedIds: string[];
+  exercises: DaxExercise[];
 }) {
   const dict = dictionaries[locale];
-  const [exerciseId, setExerciseId] = useState<string | "sandbox">("total-sales");
-  const [code, setCode] = useState(DAX_EXERCISES[0].starter + "SUM(Sales[Amount])");
+  const first = exercises[0];
+  const [exerciseId, setExerciseId] = useState<string | "sandbox">(first?.id ?? "sandbox");
+  const [code, setCode] = useState(first ? first.starter : "SUM(Sales[Amount])");
   const [hint, setHint] = useState(false);
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState<boolean | null>(null);
 
-  const exercise: DaxExercise | undefined = DAX_EXERCISES.find((e) => e.id === exerciseId);
+  const exercise: DaxExercise | undefined = exercises.find((e) => e.id === exerciseId);
+  const copy = exercise ? getExerciseCopy(exercise, locale) : null;
 
   const locked = Boolean(exercise && !exercise.free && !isPro);
 
@@ -75,8 +79,9 @@ export function DaxLab({
     <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
       <aside className="space-y-3">
         <h2 className="font-semibold">{t(dict, "dax.exercises")}</h2>
-        {DAX_EXERCISES.map((item) => {
+        {exercises.map((item) => {
           const itemLocked = !item.free && !isPro;
+          const itemCopy = getExerciseCopy(item, locale);
           return (
             <button
               key={item.id}
@@ -92,7 +97,7 @@ export function DaxLab({
                 exerciseId === item.id ? "border-[var(--teal)] bg-[var(--teal-soft)]" : "border-[var(--line)]"
               }`}
             >
-              <span className="font-medium">{item.copy[locale].title}</span>
+              <span className="font-medium">{itemCopy.title}</span>
               {itemLocked && <span className="ml-2 text-xs text-[var(--muted)]">{t(dict, "dax.locked")}</span>}
               {passedIds.includes(item.id) && <span className="ml-2 text-xs text-emerald-700">✓</span>}
             </button>
@@ -144,7 +149,7 @@ export function DaxLab({
         </div>
       </aside>
       <section className="rounded-[28px] border border-[var(--line)] bg-[var(--panel)] p-4">
-        {exercise && <p className="text-sm text-[var(--muted)]">{exercise.copy[locale].prompt}</p>}
+        {exercise && copy && <p className="text-sm text-[var(--muted)]">{copy.prompt}</p>}
         {locked ? (
           <p className="mt-4 rounded-2xl bg-[var(--sand)] px-4 py-3 text-sm dark:bg-[var(--teal-soft)]">{t(dict, "paywall.body")}</p>
         ) : (
@@ -156,7 +161,7 @@ export function DaxLab({
               className="mt-4 h-48 w-full rounded-2xl border border-[var(--line)] bg-transparent p-4 font-mono text-sm"
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              <button type="button" onClick={() => void run()} className="rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-semibold text-white">
+              <button type="button" onClick={() => void run()} className="rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)]">
                 {t(dict, "dax.run")}
               </button>
               {exercise && (
@@ -165,7 +170,7 @@ export function DaxLab({
                 </button>
               )}
             </div>
-            {hint && exercise && <p className="mt-3 font-mono text-sm text-[var(--teal)]">{exercise.copy[locale].hint}</p>}
+            {hint && exercise && copy && <p className="mt-3 font-mono text-sm text-[var(--teal)]">{copy.hint}</p>}
             {message && (
               <p className={`mt-4 rounded-2xl px-4 py-3 text-sm ${ok ? "bg-emerald-50 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-100" : "bg-amber-50 text-amber-950 dark:bg-amber-950 dark:text-amber-100"}`}>
                 {message}

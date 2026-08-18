@@ -3,8 +3,28 @@ import type { Locale } from "@/lib/i18n";
 export interface QuizQuestion {
   id: string;
   topic: string;
-  copy: Record<Locale, { prompt: string; options: string[]; explanation: string }>;
+  copy: { en: { prompt: string; options: string[]; explanation: string } } & Partial<
+    Record<Locale, { prompt: string; options: string[]; explanation: string }>
+  >;
   answer: number;
+}
+
+export type QuizBank = "daily" | "practice" | "play";
+
+export const QUIZ_BANKS: QuizBank[] = ["daily", "practice", "play"];
+
+export function getQuizCopy(question: QuizQuestion, locale: Locale) {
+  return question.copy[locale] ?? question.copy.en;
+}
+
+export function shuffleDaily(questions: QuizQuestion[], date = new Date()): QuizQuestion[] {
+  const seed = Number(date.toISOString().slice(0, 10).replaceAll("-", ""));
+  const copy = [...questions];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = (seed + i * 17) % (i + 1);
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(5, copy.length));
 }
 
 export const QUIZ_BANK: QuizQuestion[] = [
@@ -264,14 +284,56 @@ export const QUIZ_BANK: QuizQuestion[] = [
       },
     },
   },
+  {
+    id: "q9",
+    topic: "pq",
+    answer: 1,
+    copy: {
+      en: {
+        prompt: "Unpivot is the usual fix when Excel has one column per month.",
+        options: ["False, always pivot more", "True — months should become rows with a date and a value", "Only in DirectQuery", "Only in RLS"],
+        explanation: "A fact table wants a date column, not Jan–Dec columns.",
+      },
+    },
+  },
+  {
+    id: "q10",
+    topic: "rls",
+    answer: 1,
+    copy: {
+      en: {
+        prompt: "Dynamic RLS usually filters with…",
+        options: ["Theme JSON", "USERPRINCIPALNAME() and a user-to-dimension map", "A pie chart", "Sort by column"],
+        explanation: "Map users to regions (or accounts) and filter in the role.",
+      },
+    },
+  },
+  {
+    id: "q11",
+    topic: "refresh",
+    answer: 1,
+    copy: {
+      en: {
+        prompt: "RangeStart and RangeEnd exist for…",
+        options: ["Bookmarks", "Incremental refresh partitions", "Copilot prompts", "Paginated headers"],
+        explanation: "They define the date window of each partition.",
+      },
+    },
+  },
+  {
+    id: "q12",
+    topic: "fabric",
+    answer: 1,
+    copy: {
+      en: {
+        prompt: "OneLake in Microsoft Fabric is…",
+        options: ["A DAX iterator", "Unified lake storage for Fabric workloads", "A slicer visual", "A gateway SKU"],
+        explanation: "Power BI is still the semantic/report layer on top.",
+      },
+    },
+  },
 ];
 
 export function dailyQuestions(date = new Date()): QuizQuestion[] {
-  const seed = Number(date.toISOString().slice(0, 10).replaceAll("-", ""));
-  const copy = [...QUIZ_BANK];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = (seed + i * 17) % (i + 1);
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy.slice(0, 5);
+  return shuffleDaily(QUIZ_BANK, date);
 }

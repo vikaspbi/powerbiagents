@@ -1,6 +1,6 @@
 import { SpeedRound } from "@/components/SpeedRound";
 import { QuizPlayer } from "@/components/QuizPlayer";
-import { QUIZ_BANK } from "@/content/quizzes";
+import { getPublishedQuizBank } from "@/content/activity-store";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
 import { parseLocale } from "@/lib/i18n";
@@ -27,7 +27,7 @@ export default async function PlayPage({
     return (
       <div className="space-y-4">
         <h1 className="brand-mark text-4xl">{t(dict, "play.speed")}</h1>
-        <SpeedRound locale={locale} questions={QUIZ_BANK} />
+        <SpeedRound locale={locale} questions={getPublishedQuizBank("play")} />
       </div>
     );
   }
@@ -38,7 +38,7 @@ export default async function PlayPage({
     return (
       <div className="space-y-4">
         <h1 className="brand-mark text-4xl">{t(dict, "play.boss")}</h1>
-        <QuizPlayer locale={locale} quizId="boss" questions={QUIZ_BANK} />
+        <QuizPlayer locale={locale} quizId="boss" questions={getPublishedQuizBank("play")} />
       </div>
     );
   }

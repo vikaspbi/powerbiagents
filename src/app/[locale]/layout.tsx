@@ -23,7 +23,12 @@ export default async function LocaleLayout({
   return (
     <ThemeProvider initialTheme={(user?.theme as "light" | "dark" | "system") || "system"}>
       <LocaleGate locale={locale} />
-      <AppChrome locale={locale} signedIn={Boolean(user)} isPro={Boolean(user?.isPro)} />
+      <AppChrome
+        locale={locale}
+        signedIn={Boolean(user)}
+        isPro={Boolean(user?.isPro)}
+        showAdmin={Boolean(user?.canSeeAdminPanel)}
+      />
       <main className="mx-auto min-h-[80vh] max-w-6xl px-4 py-8 pb-24">{children}</main>
     </ThemeProvider>
   );

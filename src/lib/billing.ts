@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 export function grantSubscription(input: {
   userId: string;
   plan: "monthly" | "yearly";
-  provider: "stripe" | "google_play" | "demo";
+  provider: "stripe" | "google_play" | "demo" | "admin";
   providerCustomerId?: string | null;
   providerSubscriptionId?: string | null;
   days: number;
@@ -14,7 +14,7 @@ export function grantSubscription(input: {
   getDb()
     .prepare(
       `INSERT INTO subscriptions (user_id, plan, status, provider, provider_customer_id, provider_subscription_id, current_period_end, updated_at)
-       VALUES (@userId, @plan, @status, @provider, @providerCustomerId, @providerSubscriptionId, @periodEnd, @now)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(user_id) DO UPDATE SET
          plan = excluded.plan,
          status = excluded.status,
@@ -24,16 +24,16 @@ export function grantSubscription(input: {
          current_period_end = excluded.current_period_end,
          updated_at = excluded.updated_at`,
     )
-    .run({
-      userId: input.userId,
-      plan: input.plan,
-      status: input.status ?? "active",
-      provider: input.provider,
-      providerCustomerId: input.providerCustomerId ?? null,
-      providerSubscriptionId: input.providerSubscriptionId ?? null,
+    .run(
+      input.userId,
+      input.plan,
+      input.status ?? "active",
+      input.provider,
+      input.providerCustomerId ?? null,
+      input.providerSubscriptionId ?? null,
       periodEnd,
       now,
-    });
+    );
 }
 
 export function logPurchase(provider: string, payload: unknown, userId?: string) {

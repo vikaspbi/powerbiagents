@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { dictionaries, t } from "@/i18n/dictionaries";
-import type { QuizQuestion } from "@/content/quizzes";
+import { getQuizCopy, type QuizQuestion } from "@/content/quizzes";
 import type { Locale } from "@/lib/i18n";
 
 export function QuizPlayer({
@@ -21,7 +21,7 @@ export function QuizPlayer({
   const [result, setResult] = useState<{ score: number; total: number; xp: number } | null>(null);
   const [error, setError] = useState("");
   const question = questions[index];
-  const copy = question?.copy[locale];
+  const copy = question ? getQuizCopy(question, locale) : undefined;
   const done = index >= questions.length;
 
   const progress = useMemo(
@@ -50,6 +50,10 @@ export function QuizPlayer({
         <p className="mt-2 text-[var(--teal)]">{t(dict, "quiz.xp", { xp: result.xp })}</p>
       </div>
     );
+  }
+
+  if (questions.length === 0) {
+    return <p className="text-sm text-[var(--muted)]">No questions in this bank yet.</p>;
   }
 
   if (!question || !copy || done) return null;
@@ -105,7 +109,7 @@ export function QuizPlayer({
             setIndex(index + 1);
           }
         }}
-        className="mt-5 rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="mt-5 rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)] disabled:opacity-50"
       >
         {index + 1 >= questions.length ? t(dict, "quiz.submit") : t(dict, "quiz.next")}
       </button>

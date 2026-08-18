@@ -61,7 +61,7 @@ export function SettingsForm({
           <option value="dark">{t(dict, "settings.dark")}</option>
         </select>
       </label>
-      <button className="rounded-full bg-[var(--teal)] px-5 py-3 text-sm font-semibold text-white">{t(dict, "settings.save")}</button>
+      <button className="rounded-full bg-[var(--teal)] px-5 py-3 text-sm font-bold text-[var(--ink)]">{t(dict, "settings.save")}</button>
     </form>
   );
 }

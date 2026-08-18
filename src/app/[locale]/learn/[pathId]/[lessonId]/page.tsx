@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LessonView } from "@/components/LessonView";
-import { getPath } from "@/content/lessons";
+import { getPublishedPath } from "@/content/publish";
 import { dictionaries, t } from "@/i18n/dictionaries";
 import { getDb } from "@/lib/db";
 import { canAccessLesson } from "@/lib/entitlements";
@@ -16,7 +16,7 @@ export default async function LessonPage({
   const { locale: raw, pathId, lessonId } = await params;
   const locale = parseLocale(raw);
   const user = await requireUser(locale);
-  const path = getPath(pathId);
+  const path = getPublishedPath(pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) notFound();
   const dict = dictionaries[locale];
@@ -25,7 +25,7 @@ export default async function LessonPage({
       <div className="rounded-[28px] border border-[var(--line)] bg-[var(--panel)] p-8">
         <h1 className="text-2xl font-semibold">{t(dict, "paywall.title")}</h1>
         <p className="mt-2 text-[var(--muted)]">{t(dict, "paywall.body")}</p>
-        <Link href={`/${locale}/subscribe`} className="mt-4 inline-block rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-semibold text-white">
+        <Link href={`/${locale}/subscribe`} className="mt-4 inline-block rounded-full bg-[var(--teal)] px-5 py-2 text-sm font-bold text-[var(--ink)]">
           {t(dict, "paywall.cta")}
         </Link>
       </div>

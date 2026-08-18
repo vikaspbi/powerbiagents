@@ -17,15 +17,16 @@ export const en = {
     login: "Log in",
     register: "Create account",
     logout: "Log out",
+    admin: "Admin",
   },
   landing: {
-    kicker: "Play Store–ready learning",
+    kicker: "47-chapter Power BI academy",
     title: "Make data analytics easier to understand.",
-    body: "Short lessons, trivia that actually teaches, and a DAX editor that runs against a sample model — in English, हिन्दी, Español, and Français.",
+    body: "A full curriculum from analytics basics to Fabric, DAX, governance, and PL-300 — with examples, quizzes, games, and a DAX lab. English, हिन्दी, Español, and Français. Yellow, catchy, and built to study.",
     cta: "Start learning free",
     secondary: "I already have an account",
-    f1t: "Guided paths",
-    f1d: "Essentials, data literacy, and DAX in plain language.",
+    f1t: "47 chapters",
+    f1d: "From Power Query and star schemas to Fabric, RLS, and interview prep — each topic has an explanation plus a worked example.",
     f2t: "Quiz & games",
     f2d: "Daily trivia, speed rounds, and XP with streaks.",
     f3t: "Live DAX lab",
@@ -55,7 +56,7 @@ export const en = {
     continue: "Continue learning",
     daily: "Today’s trivia",
     lab: "Open DAX lab",
-    freeHint: "Free plan: essentials path, 5 trivia questions, and 3 DAX exercises.",
+    freeHint: "Free: chapters 01–03 plus the first lesson of every later chapter. Unlock the rest with Pro.",
   },
   learn: {
     title: "Learning paths",
@@ -66,6 +67,7 @@ export const en = {
     next: "Next lesson",
     check: "Check your understanding",
     takeaway: "Takeaway",
+    example: "Example",
   },
   quiz: {
     title: "Quiz arena",
@@ -176,6 +178,7 @@ export const hi: Dictionary = {
     login: "लॉग इन",
     register: "खाता बनाएँ",
     logout: "लॉग आउट",
+    admin: "एडमिन",
   },
   landing: {
     kicker: "Play Store के लिए तैयार",
@@ -225,6 +228,7 @@ export const hi: Dictionary = {
     next: "अगला पाठ",
     check: "समझ जाँचें",
     takeaway: "मुख्य बात",
+    example: "उदाहरण",
   },
   quiz: {
     title: "क्विज़ अखाड़ा",
@@ -333,6 +337,7 @@ export const es: Dictionary = {
     login: "Entrar",
     register: "Crear cuenta",
     logout: "Salir",
+    admin: "Admin",
   },
   landing: {
     kicker: "Lista para Play Store",
@@ -382,6 +387,7 @@ export const es: Dictionary = {
     next: "Siguiente lección",
     check: "Comprueba lo que entendiste",
     takeaway: "Idea clave",
+    example: "Ejemplo",
   },
   quiz: {
     title: "Arena de quizzes",
@@ -490,6 +496,7 @@ export const fr: Dictionary = {
     login: "Connexion",
     register: "Créer un compte",
     logout: "Déconnexion",
+    admin: "Admin",
   },
   landing: {
     kicker: "Prête pour le Play Store",
@@ -539,6 +546,7 @@ export const fr: Dictionary = {
     next: "Leçon suivante",
     check: "Vérifiez votre compréhension",
     takeaway: "À retenir",
+    example: "Exemple",
   },
   quiz: {
     title: "Arène des quiz",

@@ -1,4 +1,5 @@
-import { dailyQuestions, QUIZ_BANK } from "@/content/quizzes";
+import { getPublishedQuizBank } from "@/content/activity-store";
+import { shuffleDaily } from "@/content/quizzes";
 import { getCurrentUser, touchStreak } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { jsonError } from "@/lib/http";
@@ -26,7 +27,14 @@ export async function POST(request: Request) {
     }
   }
 
-  const bank = quizId === "daily" ? dailyQuestions() : quizId === "boss" ? QUIZ_BANK.slice(0, 8) : QUIZ_BANK;
+  const practice = getPublishedQuizBank("practice");
+  const play = getPublishedQuizBank("play");
+  const bank =
+    quizId === "daily"
+      ? shuffleDaily(getPublishedQuizBank("daily"))
+      : quizId === "boss"
+        ? play.slice(0, 8)
+        : practice;
   let score = 0;
   for (const q of bank) {
     if (answers[q.id] === q.answer) score += 1;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { dictionaries, t } from "@/i18n/dictionaries";
-import type { QuizQuestion } from "@/content/quizzes";
+import { getQuizCopy, type QuizQuestion } from "@/content/quizzes";
 import type { Locale } from "@/lib/i18n";
 
 export function SpeedRound({ locale, questions }: { locale: Locale; questions: QuizQuestion[] }) {
@@ -27,8 +27,8 @@ export function SpeedRound({ locale, questions }: { locale: Locale; questions: Q
     return () => window.clearInterval(id);
   }, [over]);
 
-  const question = questions[index % questions.length];
-  const copy = question.copy[locale];
+  const question = questions[index % Math.max(questions.length, 1)];
+  const copy = question ? getQuizCopy(question, locale) : null;
 
   function pick(i: number) {
     if (over) return;
@@ -40,6 +40,10 @@ export function SpeedRound({ locale, questions }: { locale: Locale; questions: Q
       if (nextLives <= 0) setOver(true);
     }
     setIndex((n) => n + 1);
+  }
+
+  if (questions.length === 0 || !question || !copy) {
+    return <p className="text-sm text-[var(--muted)]">No play questions are published yet.</p>;
   }
 
   if (over) {
