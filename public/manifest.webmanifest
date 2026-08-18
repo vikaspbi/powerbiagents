@@ -1,0 +1,17 @@
+{
+  "name": "LearnInPowerBI",
+  "short_name": "LearnInPBI",
+  "description": "Learn Power BI, DAX, and analytics with quizzes and a practice lab.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e8eef0",
+  "theme_color": "#0b5f6b",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
